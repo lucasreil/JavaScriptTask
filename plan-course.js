@@ -1,8 +1,8 @@
 const https = require('https');
 
-// ==========================================
+
 // 1. Datenstruktur & Konfiguration
-// ==========================================
+
 
 // Kurs (10 Tage)
 const mainCourse = [
@@ -31,9 +31,8 @@ const extensionCourse = [
 const allCourseDays = [...mainCourse, ...extensionCourse];
 
 
-// ==========================================
 // 2. Hilfsfunktionen
-// ==========================================
+
 
 /**
  * Holt die Feiertage für ein bestimmtes Jahr via Nager.Date API
@@ -67,8 +66,8 @@ function fetchHolidays(year) {
 }
 
 /**
- * Parst das Startdatum aus dem Format DD.MM.YYYY
- * Setzt die Uhrzeit auf 12:00 Uhr, um DST-Verschiebungen (Sommer-/Winterzeit) zu vermeiden.
+ * Startdatum aus dem Format DD.MM.YYYY
+ * Setzt die Uhrzeit auf 12:00 Uhr, um Zeitverschiebungen (Sommer-/Winterzeit) zu vermeiden.
  */
 function parseGermanDate(dateString) {
     const parts = dateString.split('.');
@@ -111,9 +110,9 @@ function isWeekend(date) {
 }
 
 
-// ==========================================
+
 // 3. Hauptlogik
-// ==========================================
+
 
 async function main() {
     // 1. Argument-Prüfung
@@ -161,7 +160,7 @@ async function main() {
     while (coursePointer < allCourseDays.length) {
         const isoDateString = formatDateToISO(currentDate);
 
-        // Edge-Case Handling: Wenn das Eingabedatum direkt ein Feiertag oder Wochenende ist, 
+        // Wenn das Eingabedatum direkt ein Feiertag oder Wochenende ist: 
         // wird es hier abgefangen und der Kursbeginn auf den nächsten Werktag verschoben.
         if (isWeekend(currentDate) || holidaysSet.has(isoDateString)) {
             // Tag überspringen
@@ -178,19 +177,17 @@ async function main() {
         
         console.log(`${dateLabel} | ${typeLabel.padEnd(14)} | ${dayLabel} | Start: ${currentCourseInfo.startTime} (${currentCourseInfo.duration}) | ${currentCourseInfo.title}`);
 
-        // Pointer und Datum für den nächsten Durchlauf inkrementieren
+        // Für nächsten Durchlauf
         currentCourseInfo.assignedDate = new Date(currentDate); 
         currentDate.setDate(currentDate.getDate() + 1);
         coursePointer++;
         
-        // Optische Trennung zwischen Kurs und Erweiterung in der Konsole
         if (coursePointer === mainCourse.length) {
-            console.log("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
+            console.log("- - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - ");
         }
     }
     
     console.log("\n Planung erfolgreich abgeschlossen.\n");
 }
 
-// Skript ausführen
 main();
